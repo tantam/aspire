@@ -1,0 +1,14 @@
+{
+    "name": "Loan",
+    "alias": "loan",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\Loan\\Providers\\LoanServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
