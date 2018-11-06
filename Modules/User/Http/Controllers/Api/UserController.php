@@ -13,8 +13,8 @@ use App\Http\Controllers\ApiController;
 
 use Illuminate\Http\Request;
 use Modules\User\Http\Requests\CreateUserRequest;
+use Modules\User\Http\Requests\UpdateUserRequest;
 use Modules\User\Repositories\UserRepository;
-use Modules\User\Transformers\UserCollectionResource;
 use Modules\User\Transformers\UserResource;
 
 class UserController extends ApiController
@@ -35,7 +35,7 @@ class UserController extends ApiController
 
     /**
      * Get user list with pagination
-     *
+     * @return mixed
      */
     public function all(){
 
@@ -44,9 +44,11 @@ class UserController extends ApiController
         return $this->responseSuccess(UserResource::collection($users));
     }
     /**
+     *
      * Create new user
      *
      * @param CreateUserRequest $request
+     * @return mixed
      */
     public function create(CreateUserRequest $request){
 
@@ -71,11 +73,13 @@ class UserController extends ApiController
     }
 
     /**
+     * Update name of user by ID
+     *
      * @param Request $request
      * @param $user_id
      * @return mixed
      */
-    public function update(Request $request, $user_id){
+    public function update(UpdateUserRequest $request, $user_id){
 
         $user = $this->userRepository->find($user_id);
 

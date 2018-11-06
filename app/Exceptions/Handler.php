@@ -63,7 +63,7 @@ class Handler extends ExceptionHandler
             case $exception instanceof ModelNotFoundException:
                 $statusCode = 404;
                 $errors = [
-                    'message'=>$exception->getMessage(),
+                    'message'=>'No result found for '.class_basename($exception->getModel()).' with id '.implode('',$exception->getIds()),
                     'code'=>$exception->getCode(),
                 ];
                 break;
@@ -78,7 +78,7 @@ class Handler extends ExceptionHandler
                 $statusCode = 400;
                 $errors = [
                     'message'=>$exception->getMessage(),
-                    'code'=>$exception->getTrace(),
+                    'code'=>$exception->getCode(),
                 ];
         }
         if(config('app.debug')){

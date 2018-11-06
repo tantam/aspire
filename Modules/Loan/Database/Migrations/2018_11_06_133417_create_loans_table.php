@@ -21,7 +21,7 @@ class CreateLoansTable extends Migration
             $table->integer('repayment_frequency')->comment('every x month');
             $table->float('interest_rate');
             $table->bigInteger('arrangement_fee');
-            $table->boolean('status')->default(1)->comment('1: open, 0: closed, 3:finished');
+            $table->boolean('status')->default(1)->comment('1: open, 0: closed, 2:finished');
             $table->timestamps();
         });
     }

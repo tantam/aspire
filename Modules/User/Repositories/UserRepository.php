@@ -8,9 +8,18 @@
 
 namespace Modules\User\Repositories;
 
-
-
+/**
+ * Class UserRepository
+ * @package Modules\User\Repositories
+ *
+ * @method  User find($id)
+ * @method  User create($data)
+ * @method  User update($model, array $data)
+ * @method  bool|null destroy($model)
+ * @method  \Illuminate\Database\Eloquent\Collection || User[] all
+ */
 use App\Repositories\BaseRepository;
+use Modules\User\Entities\User;
 
 interface UserRepository extends BaseRepository
 {

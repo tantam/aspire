@@ -13,6 +13,9 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/loan', function (Request $request) {
-    return $request->user();
+Route::prefix('user/{user_id}/loan')->group(function () {
+    Route::get('/', 'Api\LoanController@listByUser');
+    Route::post('/create', 'Api\LoanController@create');
+    Route::get('/{loan_id}', 'Api\LoanController@show');
+    Route::post('/{loan_id}/repayment', 'Api\LoanController@repayment');
 });

@@ -36,6 +36,6 @@ abstract class ApiFormRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         $errors = (new ValidationException($validator))->errors();
-        throw new InvalidInputDataException(implode(" ", array_collapse($errors)));
+        throw new InvalidInputDataException(implode(". ", array_collapse($errors)));
     }
 }

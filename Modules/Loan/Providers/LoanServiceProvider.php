@@ -4,6 +4,10 @@ namespace Modules\Loan\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Modules\Loan\Repositories\Eloquent\EloquentLoanRepository;
+use Modules\Loan\Repositories\Eloquent\EloquentRepaymentRepository;
+use Modules\Loan\Repositories\LoanRepository;
+use Modules\Loan\Repositories\RepaymentRepository;
 
 class LoanServiceProvider extends ServiceProvider
 {
@@ -35,6 +39,9 @@ class LoanServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->bind(LoanRepository::class,EloquentLoanRepository::class);
+        $this->app->bind(RepaymentRepository::class,EloquentRepaymentRepository::class);
+
         $this->app->register(RouteServiceProvider::class);
     }
 
