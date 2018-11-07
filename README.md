@@ -40,3 +40,13 @@ php artisan module:migrate Loan
 ```
 
  After all installation and migration are done, now you can use application
+
+
+# Features
+- Create new user
+- Update a user by ID
+- Get user list
+- Create a loan with user id
+- Get list loan of a user
+- Get load detail by loan id and user id
+- Pay repayment buy user id, loan id and repayment id
