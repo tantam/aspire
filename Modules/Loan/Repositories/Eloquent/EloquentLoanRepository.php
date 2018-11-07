@@ -59,7 +59,7 @@ class EloquentLoanRepository extends EloquentBaseRepository implements LoanRepos
         for ($i = 1; $i <= $number_of_repayment; $i++) {
 
             $repayment_month = $i*$loan->repayment_frequency;
-            $repayment_due_date = date('Y-m-d', strtotime("+{($repayment_month)} months"));
+            $repayment_due_date = date('Y-m-d', strtotime("+{$repayment_month} months"));
 
             if (strtotime($repayment_due_date) > strtotime($loan->due_date)) {
                 $repayment_due_date = $loan->due_date;
