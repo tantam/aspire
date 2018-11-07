@@ -14,8 +14,8 @@ class AddLoanDateAtAndDueDateAtToLoansTable extends Migration
     public function up()
     {
         Schema::table('loans', function (Blueprint $table) {
-            $table->dateTime('loan_date_at')->nullable();
-            $table->dateTime('due_date_at')->nullable();
+            $table->date('loan_date');
+            $table->date('due_date');
         });
     }
 
@@ -27,7 +27,7 @@ class AddLoanDateAtAndDueDateAtToLoansTable extends Migration
     public function down()
     {
         Schema::table('loans', function (Blueprint $table) {
-            $table->dropColumn(['loan_date_at','due_date_at']);
+            $table->dropColumn(['loan_date','due_date']);
         });
     }
 }

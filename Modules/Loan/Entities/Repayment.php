@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Repayment extends Model
 {
-    const APPROVED_STATUS = 1;
-    const REJECTED_STATUS = 0;
+    const PAID_STATUS = 1;
+    const UNPAID_STATUS = 0;
 
     protected $fillable = [
         'loan_id',
+        'due_date',
         'amount',
         'status',
     ];

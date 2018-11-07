@@ -17,6 +17,8 @@ class RepaymentResource extends Resource
         return [
             'id' => (integer)$this->id,
             'amount' => (integer)$this->amount,
+            'status' => (integer)$this->status,
+            'due_date' => (string)$this->due_date,
             'created_at' => (string)$this->created_at,
         ];
     }

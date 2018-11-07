@@ -21,11 +21,5 @@ class EloquentRepaymentRepository extends EloquentBaseRepository implements Repa
         parent::__construct($model);
     }
 
-    public function getTotalAmountRePaid(Loan $loan)
-    {
-        $total = $this->getModel()->where('loan_id',$loan->id)->where('status',Repayment::APPROVED_STATUS)->sum('amount');
-        return round($total,2);
-    }
-
 
 }

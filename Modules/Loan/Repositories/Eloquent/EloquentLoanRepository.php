@@ -9,6 +9,7 @@
 namespace Modules\Loan\Repositories\Eloquent;
 
 
+use App\Exceptions\AppException;
 use App\Repositories\Eloquent\EloquentBaseRepository;
 use Modules\Loan\Entities\Loan;
 use Modules\Loan\Entities\Repayment;
@@ -28,46 +29,68 @@ class EloquentLoanRepository extends EloquentBaseRepository implements LoanRepos
     {
         $data['user_id'] = $user->id;
         $data['status'] = Loan::OPEN_STATUS;
-        $data['due_date_at'] = strtotime('+'.$data['duration'].' months',strtotime($data['loan_date_at']));
+        $data['due_date'] = strtotime('+' . $data['duration'] . ' months', strtotime($data['loan_date']));
 
-        return $this->create($data);
-    }
+        $loan = $this->create($data);
 
-    public function getLoansByUser(User $user)
-    {
-        return $this->getModel()->where('user_id',$user->id)->paginate();
-    }
-
-    public function findLoanByUser(User $user, $loan_id)
-    {
-        return $this->getModel()->where('user_id',$user->id)->firstOrFail();
-    }
-
-    public function repaymentALoan(Loan $loan, $amount)
-    {
-        $repayment_amount = $loan->getRepaymentAmount();
-
-        $total_amount_repaid = app(RepaymentRepository::class)->getTotalAmountRePaid($loan);
-
-        if($total_amount_repaid >= $repayment_amount){
-            throw new CannotRepaymentLoanException('User cannot make a repayment for a loan that\'s already been repaid.');
-        }
-
-        if($total_amount_repaid+$amount > $repayment_amount){
-            throw new CannotRepaymentLoanException('Given repayment amount is greater than expected repayment amount.');
-        }
-
-        $loan->repayments()->create(['amount'=>$amount,'status'=>Repayment::APPROVED_STATUS]);
-
-        $this->finishLoan($loan);
+        $this->generateRepayments($loan);
 
         return $loan;
     }
 
+    public function getLoansByUser(User $user)
+    {
+        return $this->getModel()->where('user_id', $user->id)->paginate();
+    }
 
-    protected function finishLoan(Loan $loan){
-        if(app(RepaymentRepository::class)->getTotalAmountRePaid($loan) >= $loan->getRepaymentAmount()){
+    public function findLoanByUser(User $user, $loan_id)
+    {
+        return $this->getModel()->where('user_id', $user->id)->firstOrFail();
+    }
+
+    protected function generateRepayments(Loan $loan)
+    {
+        $total_repayment_amount = $loan->getRepaymentAmount();
+
+        $number_of_repayment = round($loan->duration / $loan->repayment_frequency);
+
+        $repayment_amount = $total_repayment_amount / $number_of_repayment;
+
+        for ($i = 1; $i <= $number_of_repayment; $i++) {
+
+            $repayment_due_date = date('Y-m-d', strtotime("+{$i} months"));
+
+            if (strtotime($repayment_due_date) > strtotime($loan->due_date)) {
+                $repayment_due_date = $loan->due_date;
+            }
+
+            $loan->repayments()->create([
+                'amount' => $repayment_amount,
+                'status' => Repayment::UNPAID_STATUS,
+                'due_date' => $repayment_due_date,
+            ]);
+        }
+
+        return $loan;
+    }
+
+    public function payRepayment(Loan $loan, Repayment $repayment)
+    {
+        if($repayment->status == Repayment::PAID_STATUS){
+            throw new AppException("This repayment have been repaid");
+        }
+        $repayment->status = Repayment::PAID_STATUS;
+        $repayment->save();
+        $this->finishLoan($loan);
+        return $loan;
+    }
+
+
+    protected function finishLoan(Loan $loan)
+    {
+        if (app(RepaymentRepository::class)->getModel()->where('loan_id', $loan->id)->where('status', Repayment::UNPAID_STATUS)->count() == 0) {
             $loan->status = Loan::FINISHED_STATUS;
+            $loan->save();
         }
 
         return $loan;

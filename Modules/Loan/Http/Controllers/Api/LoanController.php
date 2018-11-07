@@ -11,9 +11,10 @@ namespace Modules\Loan\Http\Controllers\Api;
 
 use App\Http\Controllers\ApiController;
 
+use Illuminate\Http\Request;
 use Modules\Loan\Http\Requests\CreateLoanRequest;
-use Modules\Loan\Http\Requests\RepaymentALoanRequest;
 use Modules\Loan\Repositories\LoanRepository;
+use Modules\Loan\Repositories\RepaymentRepository;
 use Modules\Loan\Transformers\LoanResource;
 use Modules\User\Repositories\UserRepository;
 
@@ -27,16 +28,22 @@ class LoanController extends ApiController
      * @var UserRepository
      */
     protected $userRepository;
+    /**
+     * @var RepaymentRepository
+     */
+    protected $repaymentRepository;
 
     /**
      * LoanController constructor.
      * @param LoanRepository $loanRepository
      * @param UserRepository $userRepository
+     * @param RepaymentRepository $repaymentRepository
      */
-    public function __construct(LoanRepository $loanRepository, UserRepository $userRepository)
+    public function __construct(LoanRepository $loanRepository, UserRepository $userRepository, RepaymentRepository $repaymentRepository)
     {
         $this->loanRepository = $loanRepository;
         $this->userRepository = $userRepository;
+        $this->repaymentRepository = $repaymentRepository;
     }
 
     /**
@@ -67,7 +74,7 @@ class LoanController extends ApiController
         $user = $this->userRepository->find($user_id);
 
         $loan = $this->loanRepository->createLoan($user, $input);
-
+        $loan->load('repayments');
         return $this->responseSuccess(new LoanResource($loan));
     }
 
@@ -85,19 +92,19 @@ class LoanController extends ApiController
 
         $loan = $this->loanRepository->findLoanByUser($user, $loan_id);
 
+        $loan->load('repayments');
+
         return $this->responseSuccess(new LoanResource($loan));
     }
 
-    public function repayment($user_id, $loan_id, RepaymentALoanRequest $request ){
-
-        $input = $request->validated();
-
-        $amount = $input['amount'];
+    public function payRepayment($user_id, $loan_id, $repayment_id){
 
         $user = $this->userRepository->find($user_id);
         $loan = $this->loanRepository->findLoanByUser($user, $loan_id);
+        $repayment = $this->repaymentRepository->getModel()->where('id',$repayment_id)->where('loan_id', $loan->id)->firstOrFail();
 
-        $loan = $this->loanRepository->repaymentALoan($loan,$amount);
+
+        $loan = $this->loanRepository->payRepayment($loan,$repayment);
 
         $loan->load('repayments');
 

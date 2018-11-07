@@ -25,5 +25,5 @@ use Modules\Loan\Entities\Repayment;
  */
 interface RepaymentRepository extends BaseRepository
 {
-    public function getTotalAmountRePaid(Loan $loan);
+
 }

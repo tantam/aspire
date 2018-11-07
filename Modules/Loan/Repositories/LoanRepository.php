@@ -12,6 +12,7 @@ namespace Modules\Loan\Repositories;
 
 use App\Repositories\BaseRepository;
 use Modules\Loan\Entities\Loan;
+use Modules\Loan\Entities\Repayment;
 use Modules\User\Entities\User;
 /**
  * Class LoanRepository
@@ -47,8 +48,8 @@ interface LoanRepository extends BaseRepository
 
     /**
      * @param Loan $loan
-     * @param $amount
+     * @param Repayment $repayment
      * @return mixed
      */
-    public function repaymentALoan(Loan $loan, $amount);
+    public function payRepayment(Loan $loan, Repayment $repayment);
 }

@@ -11,7 +11,7 @@ class Loan extends Model
     const CLOSED_STATUS = 0;
     const FINISHED_STATUS = 2;
 
-    protected $dates  = ['loan_date_at', 'due_date_at'];
+    protected $dates  = ['loan_date', 'due_date'];
 
     protected $fillable = [
         'user_id',
@@ -21,8 +21,8 @@ class Loan extends Model
         'interest_rate',
         'arrangement_fee',
         'status',
-        'loan_date_at',
-        'due_date_at',
+        'loan_date',
+        'due_date',
     ];
 
     public function user()

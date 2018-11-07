@@ -23,8 +23,8 @@ class LoanResource extends Resource
             'interest_rate' => (float)$this->interest_rate,
             'arrangement_fee' => (integer)$this->arrangement_fee,
             'repayment_amount' => (integer)$this->getRepaymentAmount(),
-            'loan_date_at' => (string)$this->loan_date_at,
-            'due_date_at' => (string)$this->due_date_at,
+            'loan_date' => (string)$this->loan_date,
+            'due_date' => (string)$this->due_date,
             'status' => (integer)$this->status,
             'repayments' => $this->when($this->whenLoaded('repayments'), RepaymentResource::collection($this->repayments))
         ];

@@ -17,5 +17,5 @@ Route::prefix('user/{user_id}/loan')->group(function () {
     Route::get('/', 'Api\LoanController@listByUser');
     Route::post('/create', 'Api\LoanController@create');
     Route::get('/{loan_id}', 'Api\LoanController@show');
-    Route::post('/{loan_id}/repayment', 'Api\LoanController@repayment');
+    Route::post('/{loan_id}/pay/{repayment_id}', 'Api\LoanController@payRepayment');
 });

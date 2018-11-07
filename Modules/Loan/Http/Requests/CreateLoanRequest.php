@@ -16,10 +16,10 @@ class CreateLoanRequest extends ApiFormRequest
         return [
             'amount'=>'required|min:1|integer',
             'duration'=>'required|min:1|integer',
-            'repayment_frequency'=>'required|min:1|integer',
+            'repayment_frequency'=>'required|min:1|integer|lte:duration',
             'interest_rate'=>'required|min:0|numeric',
             'arrangement_fee'=>'required|min:1|integer',
-            'loan_date_at' => 'required|date'
+            'loan_date' => 'required|date'
         ];
     }
 
